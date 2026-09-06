@@ -7,7 +7,7 @@
 
 > **Thông tin Nhóm nghiên cứu:**
 > - **Tác giả:** Nguyễn Tư Sơn
-> - **Đồng tác giả (Giảng viên hướng dẫn):** TS. Hà Minh Cường & ThS. Hoàng Tích Phúc
+> - **Đồng tác giả:** TS. Hà Minh Cường & ThS. Hoàng Tích Phúc
 > - **Đơn vị công tác:** Khoa Công nghệ Hàng không Vũ trụ, Trường Đại học Công nghệ - Đại học Quốc gia Hà Nội (UET - VNU)
 
 ## 📌 Giới thiệu dự án (Project Overview)
@@ -26,44 +26,75 @@ Toàn bộ luồng dữ liệu từ khâu thu thập viễn thám đến khi xu�
 
 ```mermaid
 flowchart TD
-    subgraph GIS ["GIS & REMOTE SENSING"]
-        FI[Flood Inventory: FloodMarks 1999]
-        DR[Đặc trưng raster đầu vào]
+    subgraph GIS ["GIS - REMOTE SENSING"]
+        direction LR
+        subgraph FI ["Flood Inventory"]
+            F_Marks["FloodMarks 1999"]
+        end
         
-        DEM[DEM ALOS World 3D]
-        Topo[Đặc trưng địa hình: Slope, Aspect...]
-        Hydro[Đặc trưng thủy văn: HAND, TWI...]
-        Manning[Hệ số Manning n]
-        GSW[GSW Occurrence]
-        Precip[Precipitation 1999]
-        
-        DR --- DEM & Topo & Hydro & Manning & GSW & Precip
+        subgraph DR ["Đặc trưng raster đầu vào"]
+            direction LR
+            D_DEM["DEM (ALOS\nWorld 3D,\n30m)"]
+            D_Topo["Đặc trưng địa\nhình (7)"]
+            D_Hydro["Đặc trưng\nthủy văn (5)"]
+            D_Man["Hệ số\nManning n"]
+            D_GSW["GSW\nOccurrence"]
+            D_Precip["Precipitation\n1999"]
+        end
     end
 
     subgraph ML ["MACHINE LEARNING"]
-        FE[Feature Engineering\n16 gốc + 15 tương tác = 31 đặc trưng]
-        Split[Phân chia dữ liệu Stratified\nTrain 80% - Val 10% - Test 10%]
+        direction TB
+        FE["Feature Engineering\n(16 gốc + 15 tương tác =\n31 đặc trưng)"]
+        Split["Phân chia dữ liệu (Stratified)\nTrain 80% - Val 10% - Test 10%"]
         
         subgraph Train ["Quá trình Huấn luyện & Tối ưu"]
-            Models[1. Random Forest\n2. XGBoost GPU\n3. Deep Neural Network]
-            CV[Cross-Validation K=5\nTinh chỉnh tham số]
-            Check{R² > 0.85?}
+            direction TB
+            Models["1. Random Forest\n2. XGBoost GPU\n3. Deep Neural Network"]
+            CV{"Cross-Validation (K=5)\nTinh chỉnh tham số"}
             
-            Models --> Check
-            Check -- No --> CV
-            CV --> Models
-            Check -- Yes --> Trained[Mô hình đã huấn luyện:\nRF, XGBoost, DNN]
+            Models -->|Input parameters| CV
+            CV -->|R² < 0.85 (No)| Models
+            
+            Trained{{"Mô hình đã huấn luyện:\nRF, XGBoost, DNN"}}
+            CV ---> Trained
         end
         
-        Eval[Đánh giá hiệu suất\nR², RMSE, MAE, MAPE, Accuracy]
-        Post[Hậu xử lý thủy lực\nGaussian smoothing & Phân vùng]
-        Map((BẢN ĐỒ ĐỘ SÂU NGẬP LỤT\nĐộ phân giải 30m\nPhân vùng 6 cấp độ ngập))
+        Eval["Đánh giá hiệu suất\n(R², RMSE, MAE, MAPE, Accuracy)"]
+        Post["Hậu xử lý thủy lực\n(Gaussian smoothing & Phân vùng)"]
         
-        FE --> Split --> Train
-        Trained --> Eval --> Post --> Map
+        FE --> Split
+        Split --> Train
+        Trained --> Eval
+        Eval --> Post
     end
 
-    GIS --> ML
+    Map[/"BẢN ĐỒ ĐỘ SÂU NGẬP LỤT\nĐộ phân giải 30m (~5,8 triệu pixel)\nPhân vùng 6 cấp độ ngập"/]
+
+    F_Marks --> Split
+    DR --> FE
+    Post --> Map
+
+    style GIS fill:#f9faff,stroke:#3b5998,stroke-width:2px,color:#1d3557
+    style ML fill:#f4fff8,stroke:#2a9d8f,stroke-width:2px,color:#1d3557
+    style Map fill:#f4a261,stroke:#e76f51,stroke-width:2px,color:#fff
+    style FI fill:#fff,stroke:#3b5998
+    style DR fill:#fff,stroke:#3b5998
+    style Train fill:#e8f8f5,stroke:#2a9d8f,stroke-dasharray: 5 5
+    style CV fill:#f4a261,stroke:#e76f51,color:#fff
+    style Trained fill:#cbaacb,stroke:#835090
+    style F_Marks fill:#e1f5fe
+    style D_DEM fill:#e1f5fe
+    style D_Topo fill:#e1f5fe
+    style D_Hydro fill:#e1f5fe
+    style D_Man fill:#e1f5fe
+    style D_GSW fill:#e1f5fe
+    style D_Precip fill:#e1f5fe
+    style FE fill:#e1f5fe
+    style Split fill:#e1f5fe
+    style Models fill:#e1f5fe
+    style Eval fill:#e1f5fe
+    style Post fill:#e1f5fe
 ```
 
 ---
