@@ -60,66 +60,9 @@
 
 <div align="center">
 
-```mermaid
-flowchart TD
-    subgraph GIS ["GIS - REMOTE SENSING"]
-        direction LR
-        subgraph FI ["Flood Inventory"]
-            F_Marks("FloodMarks 1999<br>1.000 điểm đo")
-        end
-        
-        subgraph DR ["Đặc trưng raster đầu vào"]
-            direction LR
-            D_DEM("DEM ALOS<br>World 3D 30m")
-            D_Topo("Đặc trưng<br>địa hình 7")
-            D_Hydro("Đặc trưng<br>thủy văn 5")
-            D_Man("Hệ số<br>Manning n")
-            D_GSW("GSW<br>Occurrence")
-            D_Precip("Precipitation<br>1999")
-        end
-    end
-
-    subgraph ML ["MACHINE LEARNING"]
-        direction TB
-        FE("Feature Engineering<br>16 gốc + 15 tương tác = 31 đặc trưng")
-        Split("Phân chia dữ liệu Stratified<br>Train 80% - Val 10% - Test 10%")
-        
-        subgraph Train ["Quá trình Huấn luyện & Tối ưu"]
-            direction TB
-            Models("1. Random Forest<br>2. XGBoost GPU<br>3. Deep Neural Network")
-            CV{"Cross-Validation K=5<br>Tinh chỉnh tham số"}
-            
-            Models -->|Input parameters| CV
-            CV -->|R² thấp - No| Models
-            
-            Trained{{"Mô hình đã huấn luyện:<br>RF, XGBoost, DNN"}}
-            CV ---> Trained
-        end
-        
-        Eval("Đánh giá hiệu suất<br>R², RMSE, MAE, MAPE, Accuracy")
-        Post("Hậu xử lý thủy lực<br>Gaussian smoothing & Phân vùng")
-        
-        FE --> Split
-        Split --> Train
-        Trained --> Eval
-        Eval --> Post
-    end
-
-    Map[/"BẢN ĐỒ ĐỘ SÂU NGẬP LỤT<br>Độ phân giải 30m 5,8 triệu pixel<br>Phân vùng 6 cấp độ ngập"/]
-
-    F_Marks --> Split
-    DR --> FE
-    Post --> Map
-
-    style GIS fill:#f9faff,stroke:#3b5998,stroke-width:2px,color:#1d3557
-    style ML fill:#f4fff8,stroke:#2a9d8f,stroke-width:2px,color:#1d3557
-    style Map fill:#f4a261,stroke:#e76f51,stroke-width:2px,color:#fff
-    style FI fill:#fff,stroke:#3b5998
-    style DR fill:#fff,stroke:#3b5998
-    style Train fill:#e8f8f5,stroke:#2a9d8f,stroke-dasharray: 5 5
-    style CV fill:#f4a261,stroke:#e76f51,color:#fff
-    style Trained fill:#cbaacb,stroke:#835090
-```
+<div align="center">
+  <img src="docs/workflow.jpg" width="90%" alt="Sơ đồ quy trình nghiên cứu">
+</div>
 *Sơ đồ 1: Luồng quy trình nghiên cứu từ thu thập dữ liệu viễn thám đến thành lập bản đồ*
 
 </div>
