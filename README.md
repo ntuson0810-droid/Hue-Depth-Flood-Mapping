@@ -20,7 +20,11 @@
 **[🗂 Dữ Liệu](#-bộ-dữ-liệu-chi-tiết)** |
 **[🤖 Mô Hình](#-các-mô-hình)** |
 **[📊 Kết Quả](#-kết-quả-thực-nghiệm)** |
-**[🚀 Cài Đặt](#-cài-đặt--sử-dụng)**
+**[🚀 Cài Đặt](#-cài-đặt--sử-dụng)** |
+**[📚 Nguồn Dữ Liệu](#-nguồn-dữ-liệu-data-sources)** |
+**[📜 Giấy Phép](#-giấy-phép-license)** |
+**[🖋️ Trích Dẫn](#️-trích-dẫn-citation)** |
+**[✉️ Liên Hệ](#️-liên-hệ-contact)**
 
 </div>
 
