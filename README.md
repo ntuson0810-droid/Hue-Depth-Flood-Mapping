@@ -24,7 +24,7 @@ Mô hình sử dụng một bộ kết hợp các lớp dữ liệu không gian 
 
 ## 📂 Cấu trúc thư mục
 
-\\\	ext
+```text
 Hue-Depth-Flood-Mapping/
 ├── data/
 │   ├── raw/           # Dữ liệu dạng bảng (CSV, Excel mốc ngập)
@@ -41,42 +41,42 @@ Hue-Depth-Flood-Mapping/
 ├── docs/              # Tài liệu tham khảo dự án
 ├── .gitignore
 └── README.md
-\\\
+```
 
 ## 🚀 Hướng dẫn cài đặt và sử dụng
 
 ### 1. Chuẩn bị môi trường
 Khuyến nghị sử dụng **Miniconda** hoặc **Anaconda** để quản lý môi trường.
 
-\\\ash
+```bash
 # Tạo môi trường ảo
 conda create -n flood python=3.9
 conda activate flood
 
 # Cài đặt các thư viện cần thiết
 pip install pandas numpy rasterio geopandas scikit-learn xgboost tensorflow matplotlib tqdm
-\\\
+```
 
 ### 2. Chuẩn bị dữ liệu
-Do giới hạn dung lượng trên Github, các file Raster kích thước lớn (\.tif\) không được tải lên kho lưu trữ này. 
-* Bạn cần chuẩn bị các file Raster tương ứng và đặt vào thư mục \data/raster/\.
-* Kiểm tra và đảm bảo các đường dẫn (relative paths) trong mã nguồn Python ở thư mục \src/\ khớp với tên file hiện có.
+Do giới hạn dung lượng trên Github, các file Raster kích thước lớn (`.tif`) không được tải lên kho lưu trữ này. 
+* Bạn cần chuẩn bị các file Raster tương ứng và đặt vào thư mục `data/raster/`.
+* Kiểm tra và đảm bảo các đường dẫn (relative paths) trong mã nguồn Python ở thư mục `src/` khớp với tên file hiện có.
 
 ### 3. Huấn luyện và dự đoán
 Mở Terminal/PowerShell tại thư mục gốc của dự án và chạy các script mô hình tương ứng:
 
-\\\ash
+```bash
 # Chạy mô hình XGBoost
 python src/xgbmanningsv5.py
 
 # Chạy mô hình Deep Neural Network
 python src/dnnmanningv5.py
-\\\
+```
 
-Mô hình sẽ tự động trích xuất các giá trị pixel, huấn luyện, tạo ra các báo cáo đánh giá (\Model_Evaluation_Report.txt\), biểu đồ \Predicted_vs_Actual.png\, và xuất bản đồ kết quả độ sâu cuối cùng dưới định dạng \.tif\ vào thư mục \esults/\.
+Mô hình sẽ tự động trích xuất các giá trị pixel, huấn luyện, tạo ra các báo cáo đánh giá (`Model_Evaluation_Report.txt`), biểu đồ `Predicted_vs_Actual.png`, và xuất bản đồ kết quả độ sâu cuối cùng dưới định dạng `.tif` vào thư mục `results/`.
 
 ## 📊 Kết quả đầu ra
-* **Bản đồ thô (RAW \.tif\)**: Chứa giá trị độ sâu ngập liên tục tính bằng mét (m).
-* **Bản đồ phân loại (Classified \.tif\)**: Độ sâu ngập được phân cấp theo các ngưỡng rủi ro.
-* **Chỉ số đánh giá**: RMSE (Root Mean Square Error), MAE (Mean Absolute Error), và hệ số xác định ^2$.
+* **Bản đồ thô (RAW `.tif`)**: Chứa giá trị độ sâu ngập liên tục tính bằng mét (m).
+* **Bản đồ phân loại (Classified `.tif`)**: Độ sâu ngập được phân cấp theo các ngưỡng rủi ro.
+* **Chỉ số đánh giá**: RMSE (Root Mean Square Error), MAE (Mean Absolute Error), và hệ số xác định $R^2$.
 * **Phân tích biến (Feature Importance)**: Tầm quan trọng của biến số dựa trên Permutation và Gain.
