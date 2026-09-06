@@ -65,39 +65,39 @@ flowchart TD
     subgraph GIS ["GIS - REMOTE SENSING"]
         direction LR
         subgraph FI ["Flood Inventory"]
-            F_Marks["FloodMarks 1999\n(1.000 điểm đo)"]
+            F_Marks("FloodMarks 1999<br>1.000 điểm đo")
         end
         
         subgraph DR ["Đặc trưng raster đầu vào"]
             direction LR
-            D_DEM["DEM ALOS\nWorld 3D\n(30m)"]
-            D_Topo["Đặc trưng\nđịa hình (7)"]
-            D_Hydro["Đặc trưng\nthủy văn (5)"]
-            D_Man["Hệ số\nManning n"]
-            D_GSW["GSW\nOccurrence"]
-            D_Precip["Precipitation\n1999"]
+            D_DEM("DEM ALOS<br>World 3D 30m")
+            D_Topo("Đặc trưng<br>địa hình 7")
+            D_Hydro("Đặc trưng<br>thủy văn 5")
+            D_Man("Hệ số<br>Manning n")
+            D_GSW("GSW<br>Occurrence")
+            D_Precip("Precipitation<br>1999")
         end
     end
 
     subgraph ML ["MACHINE LEARNING"]
         direction TB
-        FE["Feature Engineering\n(16 gốc + 15 tương tác = 31 đặc trưng)"]
-        Split["Phân chia dữ liệu (Stratified)\nTrain 80% - Val 10% - Test 10%"]
+        FE("Feature Engineering<br>16 gốc + 15 tương tác = 31 đặc trưng")
+        Split("Phân chia dữ liệu Stratified<br>Train 80% - Val 10% - Test 10%")
         
         subgraph Train ["Quá trình Huấn luyện & Tối ưu"]
             direction TB
-            Models["1. Random Forest\n2. XGBoost GPU\n3. Deep Neural Network"]
-            CV{"Cross-Validation (K=5)\nTinh chỉnh tham số"}
+            Models("1. Random Forest<br>2. XGBoost GPU<br>3. Deep Neural Network")
+            CV{"Cross-Validation K=5<br>Tinh chỉnh tham số"}
             
             Models -->|Input parameters| CV
-            CV -->|R² < 0.85 (No)| Models
+            CV -->|R² thấp - No| Models
             
-            Trained{{"Mô hình đã huấn luyện:\nRF, XGBoost, DNN"}}
+            Trained{{"Mô hình đã huấn luyện:<br>RF, XGBoost, DNN"}}
             CV ---> Trained
         end
         
-        Eval["Đánh giá hiệu suất\n(R², RMSE, MAE, MAPE, Accuracy)"]
-        Post["Hậu xử lý thủy lực\n(Gaussian smoothing & Phân vùng)"]
+        Eval("Đánh giá hiệu suất<br>R², RMSE, MAE, MAPE, Accuracy")
+        Post("Hậu xử lý thủy lực<br>Gaussian smoothing & Phân vùng")
         
         FE --> Split
         Split --> Train
@@ -105,7 +105,7 @@ flowchart TD
         Eval --> Post
     end
 
-    Map[/"BẢN ĐỒ ĐỘ SÂU NGẬP LỤT\nĐộ phân giải 30m (~5,8 triệu pixel)\nPhân vùng 6 cấp độ ngập"/]
+    Map[/"BẢN ĐỒ ĐỘ SÂU NGẬP LỤT<br>Độ phân giải 30m 5,8 triệu pixel<br>Phân vùng 6 cấp độ ngập"/]
 
     F_Marks --> Split
     DR --> FE
