@@ -1,0 +1,82 @@
+======================================================================
+BÁO CÁO ĐÁNH GIÁ MÔ HÌNH DNN v5
+======================================================================
+
+1. THÔNG SỐ MÔ HÌNH DNN:
+   - Device: CPU
+   - Architecture: DNN v5 (256-128-64-32)
+   - Activation: ReLU + BatchNorm + Dropout (0.1-0.2)
+   - Output Activation: ReLU (non-negative)
+   - Optimizer: Adam (LR=0.001, clipnorm=1.0)
+   - Loss: Huber Loss
+   - Scaler: RobustScaler
+   - Số epochs trained: 80
+   - Số lượng features: 31
+   - Train/Test: 800/200
+   - Manning lookup: ESA WorldCover
+   - Hậu xử lý: CAP-ONLY + Bathtub Spreading + Final Clip 5m
+
+2. CHỈ SỐ TỔNG (test set):
+   - R²:    0.8877
+   - RMSE:  0.2753 m
+   - MAE:   0.1165 m
+   - MAPE:  25.28%
+
+3. CHỈ SỐ CHỈ VÙNG NGẬP (Actual > 0, n=53):
+   - R² flood-only:   -0.1481
+   - RMSE flood-only: 0.5134 m
+   - MAE flood-only:  0.4132 m
+   - Bias:            -0.0631 m
+
+4. RMSE THEO CẤP ĐỘ NGẬP:
+   - Không ngập   n= 147 | RMSE=0.090m | Bias=+0.009m
+   - 0.5-1m       n=   4 | RMSE=0.721m | Bias=+0.709m
+   - 1-1.5m       n=  12 | RMSE=0.419m | Bias=+0.367m
+   - 1.5-2m       n=  23 | RMSE=0.312m | Bias=-0.047m
+   - >2m          n=  14 | RMSE=0.734m | Bias=-0.679m
+
+5. CLASSIFICATION METRICS (6 cấp):
+   - Accuracy (exact):   0.8300
+   - Accuracy (±1 cấp):  0.9750
+
+6. TRAINING HISTORY:
+   - Initial Training Loss: 0.2916
+   - Final Training Loss:   0.0489
+   - Initial Val Loss:      0.1135
+   - Final Val Loss:        0.0471
+   - Best Val Loss:         0.0378
+
+7. FEATURES SỬ DỤNG (31 features):
+    1. dsm_bathy
+    2. slope
+    3. aspect
+    4. curvature
+    5. hillshade
+    6. roughness
+    7. spi
+    8. tpi
+    9. twi
+   10. flow_accum
+   11. hand30_100
+   12. distance_r
+   13. density_ri
+   14. gsw_occure
+   15. precip_s_1
+   16. VLUCD_L2_3
+   17. manning_n
+   18. dem_x_dist
+   19. dem_x_slope
+   20. dem_x_twi
+   21. rain_x_slope
+   22. rain_x_twi
+   23. flow_x_slope
+   24. dist_x_twi
+   25. rain_x_flow
+   26. dem_squared
+   27. dist_squared
+   28. conveyance
+   29. resistance
+   30. manning_x_hand
+   31. manning_x_flow
+
+======================================================================

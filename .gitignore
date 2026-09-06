@@ -1,0 +1,17 @@
+﻿# Dữ liệu raster gốc (quá lớn)
+data/raster/*.tif
+data/raster/*.tfw
+data/raster/*.ovr
+data/raster/*.aux.xml
+
+# Các file kết quả CSV và nén siêu nặng (>100MB)
+results/**/*.csv
+results/**/*.rar
+results/**/*.zip
+
+# Các file tạm và log của Python
+__pycache__/
+*.py[cod]
+*.class
+*.log
+.DS_Store

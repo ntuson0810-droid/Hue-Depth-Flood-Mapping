@@ -1,0 +1,36 @@
+======================================================================
+BÁO CÁO ĐÁNH GIÁ MÔ HÌNH Random Forest - DỰ BÁO NGẬP LỤT
+======================================================================
+
+1. THÔNG SỐ MÔ HÌNH Random Forest:
+   - Device: CPU đa luồng (n_jobs=-1)
+   - Số lượng features: 31
+   - Số điểm huấn luyện: 200
+   - Có Manning's coefficient: CÓ
+   - Có post-hoc HAND constraint: CÓ
+   - Hậu xử lý: CAP-ONLY + Bathtub Spreading
+
+2. CHỈ SỐ ĐÁNH GIÁ:
+   - RMSE: 0.2667 m
+   - MAE: 0.1109 m
+   - R²: 0.8946
+   - MAPE: 23.54%
+
+3. FEATURE IMPORTANCE (Top 15):
+   dsm_bathy                : 0.1350
+   dem_x_twi                : 0.1314
+   dem_squared              : 0.1301
+   dem_x_slope              : 0.1280
+   slope                    : 0.0876
+   dem_x_dist               : 0.0859
+   rain_x_slope             : 0.0529
+   manning_x_hand           : 0.0397
+   VLUCD_L2_3               : 0.0341
+   manning_n                : 0.0268
+   hand30_100               : 0.0218
+   curvature                : 0.0151
+   rain_x_twi               : 0.0120
+   flow_x_slope             : 0.0095
+   resistance               : 0.0083
+
+======================================================================

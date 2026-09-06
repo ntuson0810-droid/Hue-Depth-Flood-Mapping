@@ -1,0 +1,32 @@
+======================================================================
+BÁO CÁO ĐÁNH GIÁ MÔ HÌNH RANDOM FOREST - DỰ BÁO NGẬP LỤT
+======================================================================
+
+1. THÔNG SỐ MÔ HÌNH:
+   - Số lượng cây: 1000
+   - Max depth: 20
+   - Min samples split: 5
+   - Min samples leaf: 2
+   - Max features: sqrt
+   - Số lượng features: 26
+   - Số điểm huấn luyện: 200
+
+2. CHỈ SỐ ĐÁNH GIÁ:
+   - RMSE (Root Mean Square Error): 0.2626 m
+   - MAE (Mean Absolute Error): 0.1117 m
+   - R² (Coefficient of Determination): 0.8978
+   - MAPE (Mean Absolute Percentage Error): 23.82%
+
+3. FEATURE IMPORTANCE (Top 10):
+   dem_x_slope         : 0.1900
+   dsm_bathy           : 0.1645
+   dem_x_twi           : 0.1546
+   dem_x_dist          : 0.1067
+   slope               : 0.0883
+   rain_x_slope        : 0.0581
+   VLUCD_L2_3          : 0.0458
+   hand30_100          : 0.0366
+   rain_x_twi          : 0.0245
+   curvature           : 0.0232
+
+======================================================================

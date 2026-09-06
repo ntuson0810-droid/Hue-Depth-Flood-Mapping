@@ -1,0 +1,56 @@
+======================================================================
+BÁO CÁO ĐÁNH GIÁ MÔ HÌNH XGBoost-GPU v5 v5 (FULL UPGRADE)
+======================================================================
+
+1. THÔNG SỐ MÔ HÌNH:
+   - Device: GPU (CUDA)
+   - Tree method: hist
+   - Monotonic constraints: CÓ (ràng buộc vật lý)
+   - Early stopping: 50 rounds
+   - Số iterations: 56
+   - Features: 31 | Train/Test: 800/200
+   - Manning lookup: ESA WorldCover
+   - Hậu xử lý: CAP-ONLY + Bathtub + Final Clip 5m
+
+2. CHỈ SỐ TỔNG:
+   - R²: 0.8884 | RMSE: 0.2745m | MAE: 0.1297m | MAPE: 22.60%
+
+3. CHỈ SỐ CHỈ VÙNG NGẬP (n=53):
+   - R² flood-only: -0.1208
+   - RMSE flood-only: 0.5072m
+   - Bias: -0.0714m
+
+4. RMSE THEO CẤP ĐỘ:
+   - Không ngập   n= 147 | RMSE=0.099m | Bias=+0.040m
+   - 0.5-1m       n=   4 | RMSE=0.563m | Bias=+0.533m
+   - 1-1.5m       n=  12 | RMSE=0.495m | Bias=+0.348m
+   - 1.5-2m       n=  23 | RMSE=0.217m | Bias=-0.015m
+   - >2m          n=  14 | RMSE=0.772m | Bias=-0.696m
+
+5. CLASSIFICATION METRICS:
+   - Accuracy (exact): 0.1000
+   - Accuracy (±1 cấp): 0.9650
+
+6. FEATURE IMPORTANCE (Top 20):
+   dsm_bathy                : 0.3303
+   dem_x_slope              : 0.2344
+   dem_squared              : 0.1402
+   dem_x_twi                : 0.0887
+   distance_r               : 0.0253
+   VLUCD_L2_3               : 0.0127
+   resistance               : 0.0112
+   dist_squared             : 0.0111
+   conveyance               : 0.0108
+   dist_x_twi               : 0.0097
+   manning_x_hand           : 0.0089
+   dem_x_dist               : 0.0088
+   rain_x_flow              : 0.0079
+   density_ri               : 0.0078
+   hillshade                : 0.0075
+   flow_accum               : 0.0073
+   manning_x_flow           : 0.0070
+   aspect                   : 0.0066
+   manning_n                : 0.0065
+   rain_x_slope             : 0.0064
+
+======================================================================

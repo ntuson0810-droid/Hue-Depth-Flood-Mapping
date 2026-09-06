@@ -1,0 +1,36 @@
+======================================================================
+BÁO CÁO ĐÁNH GIÁ MÔ HÌNH XGBoost-GPU-v3 - DỰ BÁO NGẬP LỤT (v3)
+======================================================================
+
+1. THÔNG SỐ MÔ HÌNH XGBoost-GPU-v3:
+   - Device: GPU (RTX 3080)
+   - Số lượng features: 31
+   - Số điểm huấn luyện: 200
+   - Có monotonic constraints: CÓ
+   - Có Manning's coefficient: CÓ
+   - Hậu xử lý: CAP-ONLY (không ép cứng)
+
+2. CHỈ SỐ ĐÁNH GIÁ:
+   - RMSE: 0.2745 m
+   - MAE: 0.1297 m
+   - R²: 0.8884
+   - MAPE: 22.60%
+
+3. FEATURE IMPORTANCE (Top 15):
+   dsm_bathy                : 0.3303
+   dem_x_slope              : 0.2344
+   dem_squared              : 0.1402
+   dem_x_twi                : 0.0887
+   distance_r               : 0.0253
+   VLUCD_L2_3               : 0.0127
+   resistance               : 0.0112
+   dist_squared             : 0.0111
+   conveyance               : 0.0108
+   dist_x_twi               : 0.0097
+   manning_x_hand           : 0.0089
+   dem_x_dist               : 0.0088
+   rain_x_flow              : 0.0079
+   density_ri               : 0.0078
+   hillshade                : 0.0075
+
+======================================================================

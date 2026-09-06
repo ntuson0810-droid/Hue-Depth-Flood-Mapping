@@ -1,0 +1,58 @@
+======================================================================
+BÁO CÁO ĐÁNH GIÁ MÔ HÌNH Random Forest v5 (VLUCD + Final Clip)
+======================================================================
+
+1. THÔNG SỐ MÔ HÌNH:
+   - Device: CPU đa luồng (n_jobs=-1)
+   - Số lượng features: 31
+   - Số điểm test: 200
+   - Manning lookup: VLUCD (Vietnam Land Use/Cover Database)
+   - Post-hoc HAND constraint: CÓ
+   - Hậu xử lý: CAP-ONLY + Bathtub Spreading + Final Clip 5m
+
+2. CHỈ SỐ TỔNG (toàn bộ test set):
+   - R²:    0.8946
+   - RMSE:  0.2667 m
+   - MAE:   0.1109 m
+   - MAPE:  23.54%
+
+3. CHỈ SỐ CHỈ VÙNG NGẬP (Actual > 0, n=53):
+   - R² flood-only:   -0.0373
+   - RMSE flood-only: 0.4879 m
+   - MAE flood-only:  0.3742 m
+   - Bias:            -0.0256 m
+
+4. RMSE THEO CẤP ĐỘ NGẬP:
+   - Không ngập   n= 147 | RMSE=0.105m | Bias=+0.016m
+   - 0.5-1m       n=   4 | RMSE=0.689m | Bias=+0.673m
+   - 1-1.5m       n=  12 | RMSE=0.506m | Bias=+0.399m
+   - 1.5-2m       n=  23 | RMSE=0.168m | Bias=+0.002m
+   - >2m          n=  14 | RMSE=0.707m | Bias=-0.634m
+
+5. CLASSIFICATION METRICS (phân loại 6 cấp):
+   - Accuracy (exact):   0.6850
+   - Accuracy (±1 cấp):  0.9700
+
+6. FEATURE IMPORTANCE (Top 20):
+   dsm_bathy                : 0.1350
+   dem_x_twi                : 0.1314
+   dem_squared              : 0.1301
+   dem_x_slope              : 0.1280
+   slope                    : 0.0876
+   dem_x_dist               : 0.0859
+   rain_x_slope             : 0.0529
+   manning_x_hand           : 0.0397
+   VLUCD_L2_3               : 0.0341
+   manning_n                : 0.0268
+   hand30_100               : 0.0218
+   curvature                : 0.0151
+   rain_x_twi               : 0.0120
+   flow_x_slope             : 0.0095
+   resistance               : 0.0083
+   conveyance               : 0.0081
+   spi                      : 0.0075
+   roughness                : 0.0067
+   distance_r               : 0.0066
+   dist_squared             : 0.0065
+
+======================================================================

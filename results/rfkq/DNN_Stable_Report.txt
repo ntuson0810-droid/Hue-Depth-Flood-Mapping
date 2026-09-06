@@ -1,0 +1,67 @@
+======================================================================
+BÁO CÁO ĐÁNH GIÁ MÔ HÌNH DNN - DỰ BÁO NGẬP LỤT
+======================================================================
+
+1. THÔNG SỐ MÔ HÌNH DNN:
+   - Device: CPU
+   - Architecture: Simple DNN (128-64-32)
+   - Activation: ReLU
+   - Output Activation: ReLU (non-negative)
+   - Regularization: Dropout (0.1) + Batch Normalization
+   - Optimizer: Adam (LR=0.001, clipnorm=1.0)
+   - Loss Function: Huber Loss
+   - Batch Size: 16
+   - Số epochs trained: 104
+   - Best epoch: 54
+   - Số lượng features: 16
+   - Tổng số điểm dữ liệu: 1000
+   - Số điểm huấn luyện (80%): 800
+   - Số điểm kiểm tra (20%): 200
+
+2. CHỈ SỐ ĐÁNH GIÁ (trên tập test):
+   - RMSE: 0.3117 m
+   - MAE: 0.1371 m
+   - R²: 0.8560
+   - MAPE: 25.51%
+
+3. THỐNG KÊ DỰ BÁO:
+   - Giá trị nhỏ nhất: 0.0000 m
+   - Giá trị lớn nhất: 1.9847 m
+   - Giá trị trung bình: 0.4539 m
+   - Độ lệch chuẩn: 0.7247 m
+
+4. TRAINING HISTORY:
+   - Initial Training Loss: 0.2773
+   - Final Training Loss: 0.0411
+   - Initial Validation Loss: 0.2053
+   - Final Validation Loss: 0.0516
+   - Best Validation Loss: 0.0473
+   - Initial MAE: 0.4687 m
+   - Final MAE: 0.1198 m
+
+5. FEATURES SỬ DỤNG:
+    1. dsm_bathy
+    2. slope
+    3. aspect
+    4. curvature
+    5. hillshade
+    6. roughness
+    7. spi
+    8. tpi
+    9. twi
+   10. flow_accum
+   11. hand30_100
+   12. distance_r
+   13. density_ri
+   14. gsw_occure
+   15. precip_s_1
+   16. VLUCD_L2_3
+
+6. GHI CHÚ:
+   - Model sử dụng RobustScaler để chuẩn hóa dữ liệu
+   - Huber Loss giúp robust với outliers
+   - Gradient clipping tránh exploding gradients
+   - Early stopping với patience=50
+   - Learning rate reduction tự động khi plateau
+
+======================================================================
