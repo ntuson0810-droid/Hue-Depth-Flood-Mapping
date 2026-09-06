@@ -5,8 +5,13 @@
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange.svg)
 ![XGBoost](https://img.shields.io/badge/XGBoost-1.x-red.svg)
 
+> **Thông tin Nhóm nghiên cứu:**
+> - **Tác giả:** Nguyễn Tư Sơn
+> - **Đồng tác giả (Giảng viên hướng dẫn):** TS. Hà Minh Cường & ThS. Hoàng Tích Phúc
+> - **Đơn vị công tác:** Khoa Công nghệ Hàng không Vũ trụ, Trường Đại học Công nghệ - Đại học Quốc gia Hà Nội (UET - VNU)
+
 ## 📌 Giới thiệu dự án (Project Overview)
-Dự án cá nhân này ứng dụng công nghệ Viễn thám (Remote Sensing), Hệ thống thông tin địa lý (GIS) và các thuật toán Học máy (Machine Learning) để dự báo và thành lập bản đồ độ sâu ngập lụt tại khu vực tỉnh Thừa Thiên Huế. Lấy sự kiện đại hồng thủy lịch sử tháng 11/1999 làm kịch bản tham chiếu chính (với 1.000 điểm khảo sát thực địa), dự án chuyển đổi từ bài toán phân loại ngập/không ngập truyền thống sang **bài toán hồi quy định lượng** để ước lượng trực tiếp giá trị độ sâu ngập lụt tại từng điểm ảnh 30m.
+Dự án ứng dụng công nghệ Viễn thám (Remote Sensing), Hệ thống thông tin địa lý (GIS) và các thuật toán Học máy (Machine Learning) để dự báo và thành lập bản đồ độ sâu ngập lụt tại khu vực tỉnh Thừa Thiên Huế. Lấy sự kiện đại hồng thủy lịch sử tháng 11/1999 làm kịch bản tham chiếu chính (với 1.000 điểm khảo sát thực địa), dự án chuyển đổi từ bài toán phân loại ngập/không ngập truyền thống sang **bài toán hồi quy định lượng** để ước lượng trực tiếp giá trị độ sâu ngập lụt tại từng điểm ảnh 30m.
 
 Điểm nổi bật của dự án là áp dụng khung tiếp cận **Physics-Informed Machine Learning (Học máy tích hợp tri thức vật lý)**:
 1. Tích hợp hệ số nhám Manning's N từ dữ liệu lớp phủ bề mặt ESA WorldCover.
@@ -15,23 +20,51 @@ Dự án cá nhân này ứng dụng công nghệ Viễn thám (Remote Sensing),
 
 ---
 
-## 🔄 Workflow (Luồng Quy trình)
+## 🔄 Sơ đồ Quy trình Nghiên cứu (Workflow)
 
-Quy trình phát triển dự án được thiết kế chặt chẽ từ khâu chuẩn bị dữ liệu đến xuất bản đồ cuối cùng:
+Toàn bộ luồng dữ liệu từ khâu thu thập viễn thám đến khi xuất bản đồ được hệ thống hóa qua biểu đồ dưới đây:
 
-1. **Thu thập & Tiền xử lý (GIS & Remote Sensing)**:
-   - Đồng bộ hóa độ phân giải không gian (30m) và hệ tọa độ (UTM Zone 48N) cho toàn bộ ảnh Raster từ các nguồn ALOS, ESA, JRC.
-   - Trích xuất giá trị Raster tại 1.000 tọa độ vết lũ (FloodMarks).
-2. **Feature Engineering**:
-   - Tính toán 16 đặc trưng gốc (Slope, TWI, HAND...).
-   - Xây dựng 15 đặc trưng tương tác thủy lực (ví dụ: `manning_n` $\times$ `hand30_100`).
-3. **Mô hình hóa (Machine Learning)**:
-   - Phân chia dữ liệu theo tỷ lệ 80% Train, 10% Validation, 10% Test (có phân tầng theo cấp độ ngập).
-   - Huấn luyện 3 kiến trúc: Random Forest, XGBoost-GPU, Deep Neural Network.
-4. **Đánh giá & Hậu xử lý**:
-   - Đánh giá trên các chỉ số: $R^2$, RMSE, MAE, MAPE, Accuracy phân loại 6 cấp.
-   - Hậu xử lý không gian (Gaussian smoothing, giới hạn độ sâu tối đa theo địa hình).
-5. **Thành lập bản đồ**: Xuất bản đồ GeoTIFF liên tục và bản đồ phân vùng rủi ro 6 cấp.
+```mermaid
+flowchart TD
+    subgraph GIS ["GIS & REMOTE SENSING"]
+        FI[Flood Inventory: FloodMarks 1999]
+        DR[Đặc trưng raster đầu vào]
+        
+        DEM[DEM ALOS World 3D]
+        Topo[Đặc trưng địa hình: Slope, Aspect...]
+        Hydro[Đặc trưng thủy văn: HAND, TWI...]
+        Manning[Hệ số Manning n]
+        GSW[GSW Occurrence]
+        Precip[Precipitation 1999]
+        
+        DR --- DEM & Topo & Hydro & Manning & GSW & Precip
+    end
+
+    subgraph ML ["MACHINE LEARNING"]
+        FE[Feature Engineering\n16 gốc + 15 tương tác = 31 đặc trưng]
+        Split[Phân chia dữ liệu Stratified\nTrain 80% - Val 10% - Test 10%]
+        
+        subgraph Train ["Quá trình Huấn luyện & Tối ưu"]
+            Models[1. Random Forest\n2. XGBoost GPU\n3. Deep Neural Network]
+            CV[Cross-Validation K=5\nTinh chỉnh tham số]
+            Check{R² > 0.85?}
+            
+            Models --> Check
+            Check -- No --> CV
+            CV --> Models
+            Check -- Yes --> Trained[Mô hình đã huấn luyện:\nRF, XGBoost, DNN]
+        end
+        
+        Eval[Đánh giá hiệu suất\nR², RMSE, MAE, MAPE, Accuracy]
+        Post[Hậu xử lý thủy lực\nGaussian smoothing & Phân vùng]
+        Map((BẢN ĐỒ ĐỘ SÂU NGẬP LỤT\nĐộ phân giải 30m\nPhân vùng 6 cấp độ ngập))
+        
+        FE --> Split --> Train
+        Trained --> Eval --> Post --> Map
+    end
+
+    GIS --> ML
+```
 
 ---
 
