@@ -195,3 +195,79 @@ python src/rfmanningsv5.py
 python src/xgbmanningsv5.py
 python src/dnnmanningv5.py
 ```
+
+
+<br>
+
+---
+
+<div align="center">
+
+## 📚 Nguồn Dữ Liệu (Data Sources)
+
+</div>
+
+Nghiên cứu này trân trọng ghi nhận và sử dụng các sản phẩm dữ liệu mở từ các tổ chức uy tín trên thế giới:
+- **JAXA (Japan Aerospace Exploration Agency):** Mô hình số độ cao ALOS World 3D 30m.
+- **ESA (European Space Agency):** Bản đồ lớp phủ bề mặt toàn cầu WorldCover 2021 (10m).
+- **JRC (Joint Research Centre - EU):** Dữ liệu lịch sử bề mặt nước Global Surface Water.
+- **MERIT-Hydro (Yamazaki et al., 2019):** Dữ liệu mạng lưới thủy văn toàn cầu có độ chính xác cao.
+- **Đài KTTV Trung Trung Bộ:** Cung cấp số liệu mưa sự kiện lịch sử 11/1999 tại tỉnh Thừa Thiên Huế.
+
+<br>
+
+---
+
+<div align="center">
+
+## 📜 Giấy Phép (License)
+
+</div>
+
+Dự án này được phân phối dưới giấy phép **MIT License**. Bạn có toàn quyền sử dụng, sửa đổi và phân phối lại mã nguồn cho mục đích cá nhân hoặc thương mại, với điều kiện ghi nhận tác giả gốc. Cấu trúc mã nguồn mở khuyến khích sự đóng góp từ cộng đồng.
+
+<br>
+
+---
+
+<div align="center">
+
+## 🖋️ Trích Dẫn (Citation)
+
+</div>
+
+Nếu bạn sử dụng mã nguồn hoặc dữ liệu từ dự án này trong nghiên cứu của mình, vui lòng trích dẫn theo định dạng BibTeX dưới đây:
+
+```bibtex
+@misc{nguyen2026hueflood,
+  author = {Nguyen, Tu Son},
+  title = {Hue Depth Flood Mapping: A Physics-Informed Machine Learning Approach},
+  year = {2026},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/ntuson0810-droid/Hue-Depth-Flood-Mapping}}
+}
+```
+
+<br>
+
+---
+
+<div align="center">
+
+## ✉️ Liên Hệ (Contact)
+
+</div>
+
+Mọi câu hỏi, thắc mắc hoặc đề xuất hợp tác (đặc biệt về hướng nghiên cứu ứng dụng AI trong biến đổi khí hậu), xin vui lòng liên hệ:
+
+- **Tác giả:** Nguyễn Tư Sơn
+- **Email:** [ntuson0810@gmail.com](mailto:ntuson0810@gmail.com)
+- **GitHub:** [@ntuson0810-droid](https://github.com/ntuson0810-droid)
+- **LinkedIn:** [Kết nối với Nguyễn Tư Sơn](#)
+
+<div align="center">
+  <br>
+  <i>Nếu bạn thấy dự án này hữu ích, hãy để lại 1 ⭐️ trên GitHub để ủng hộ tác giả nhé! Trân trọng cảm ơn.</i>
+  <br>
+</div>
