@@ -1,4 +1,8 @@
-﻿import pandas as pd
+import pandas as pd
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from src.core.utils import *
 import numpy as np
 import rasterio
 import rasterio.mask
@@ -80,166 +84,9 @@ TARGET_RESOLUTION = 30     # Độ phân giải đầu ra (30m)
 # 🛑 HẾT PHẦN CẤU HÌNH
 # ==============================================================================
 
-def extract_values_at_points(tif_path, lons, lats):
-    """Lấy giá trị pixel từ đường dẫn tuyệt đối"""
-    if not tif_path or not os.path.exists(tif_path):
-        print(f"⚠️  Bỏ qua: Không tìm thấy file {os.path.basename(tif_path) if tif_path else 'EMPTY'}")
-        return np.zeros(len(lons))
-    
-    try:
-        with rasterio.open(tif_path) as src:
-            coords = list(zip(lons, lats))
-            vals = [x[0] for x in src.sample(coords)]
-            return np.array(vals)
-    except Exception as e:
-        print(f"❌ Lỗi đọc file {tif_path}: {e}")
-        return np.zeros(len(lons))
 
-def clip_raster_by_shapefile(input_tif, shapefile_path, output_tif):
-    """Cắt file kết quả theo ranh giới Shapefile"""
-    print("\n✂️  Đang thực hiện cắt bản đồ theo Shapefile...")
-    
-    try:
-        gdf = gpd.read_file(shapefile_path)
-        
-        with rasterio.open(input_tif) as src:
-            if str(gdf.crs) != str(src.crs):
-                print("⚠️  Hệ tọa độ không khớp! Đang chuyển Shapefile về cùng hệ với Raster...")
-                gdf = gdf.to_crs(src.crs)
-            
-            shapes = [feature["geometry"] for _, feature in gdf.iterrows()]
-            out_image, out_transform = rasterio.mask.mask(src, shapes, crop=True, nodata=NODATA_VAL)
-            out_meta = src.meta.copy()
 
-        out_meta.update({
-            "driver": "GTiff",
-            "height": out_image.shape[1],
-            "width": out_image.shape[2],
-            "transform": out_transform,
-            "nodata": NODATA_VAL,
-            "compress": "lzw"
-        })
 
-        with rasterio.open(output_tif, "w", **out_meta) as dest:
-            dest.write(out_image)
-            
-        print("✅ Đã cắt bản đồ thành công!")
-        
-    except Exception as e:
-        print(f"❌ Lỗi khi cắt Shapefile: {e}")
-
-def classify_flood_depth(depth):
-    """
-    Phân loại độ sâu ngập lụt thành 6 cấp độ
-    
-    Tham khảo tiêu chuẩn quốc tế và Việt Nam:
-    - Cấp 0: Không ngập (0m)
-    - Cấp 1: Ngập nhẹ (0-0.5m) - Nước lên mắt cá chân
-    - Cấp 2: Ngập trung bình (0.5-1.0m) - Nước lên đầu gối
-    - Cấp 3: Ngập nặng (1.0-1.5m) - Nước lên thắt lưng
-    - Cấp 4: Ngập rất nặng (1.5-2.0m) - Nước ngập gần đầu người
-    - Cấp 5: Ngập đặc biệt nghiêm trọng (>2.0m) - Nước vượt đầu người
-    
-    Args:
-        depth: Độ sâu ngập (m) - có thể là scalar hoặc array
-    
-    Returns:
-        Cấp độ ngập (0-5)
-    """
-    if isinstance(depth, (int, float)):
-        # Xử lý single value
-        if depth <= 0:
-            return 0
-        elif depth <= 0.5:
-            return 1
-        elif depth <= 1.0:
-            return 2
-        elif depth <= 1.5:
-            return 3
-        elif depth <= 2.0:
-            return 4
-        else:
-            return 5
-    else:
-        # Xử lý array
-        classified = np.zeros_like(depth, dtype=np.uint8)
-        classified[depth > 0] = 1      # Ngập nhẹ
-        classified[depth > 0.5] = 2    # Ngập trung bình
-        classified[depth > 1.0] = 3    # Ngập nặng
-        classified[depth > 1.5] = 4    # Ngập rất nặng
-        classified[depth > 2.0] = 5    # Ngập đặc biệt nghiêm trọng
-        return classified
-
-def create_flood_classification_map(depth_raster_path, output_classified_path, output_legend_path):
-    """
-    Tạo bản đồ phân loại cấp độ ngập lụt từ bản đồ độ sâu
-    
-    Args:
-        depth_raster_path: Đường dẫn file raster độ sâu ngập
-        output_classified_path: Đường dẫn file output phân loại
-        output_legend_path: Đường dẫn file ảnh chú giải
-    """
-    print("\n🗺️  Đang tạo bản đồ phân loại cấp độ ngập lụt...")
-    
-    with rasterio.open(depth_raster_path) as src:
-        depth_data = src.read(1)
-        meta = src.meta.copy()
-        
-        # Phân loại
-        classified_data = np.zeros_like(depth_data, dtype=np.uint8)
-        mask = depth_data != NODATA_VAL
-        
-        classified_data[mask] = classify_flood_depth(depth_data[mask])
-        classified_data[~mask] = 255  # NoData = 255
-        
-        # Thống kê
-        unique, counts = np.unique(classified_data[mask], return_counts=True)
-        total_pixels = np.sum(counts)
-        
-        print("\n   📊 THỐNG KÊ PHÂN LOẠI:")
-        class_names = [
-            "Cấp 0: Không ngập (0m)",
-            "Cấp 1: Ngập nhẹ (0-0.5m)",
-            "Cấp 2: Ngập trung bình (0.5-1.0m)",
-            "Cấp 3: Ngập nặng (1.0-1.5m)",
-            "Cấp 4: Ngập rất nặng (1.5-2.0m)",
-            "Cấp 5: Ngập đặc biệt nghiêm trọng (>2.0m)"
-        ]
-        
-        for cls, count in zip(unique, counts):
-            if cls < len(class_names):
-                percentage = (count / total_pixels) * 100
-                print(f"   {class_names[int(cls)]}: {count:,} pixels ({percentage:.2f}%)")
-        
-        # Cập nhật metadata
-        meta.update({
-            'dtype': 'uint8',
-            'nodata': 255,
-            'compress': 'lzw'
-        })
-        
-        # Ghi file
-        with rasterio.open(output_classified_path, 'w', **meta) as dst:
-            dst.write(classified_data, 1)
-            
-            # Thêm color map
-            colormap = {
-                0: (255, 255, 255),    # Trắng - Không ngập
-                1: (255, 255, 0),      # Vàng - Ngập nhẹ
-                2: (255, 200, 0),      # Vàng cam - Ngập trung bình
-                3: (255, 150, 0),      # Cam - Ngập nặng
-                4: (255, 100, 0),      # Cam đỏ - Ngập rất nặng
-                5: (255, 0, 0),        # Đỏ - Ngập đặc biệt nghiêm trọng
-                255: (0, 0, 0)         # Đen - NoData
-            }
-            dst.write_colormap(1, colormap)
-    
-    print(f"   ✅ Đã lưu bản đồ phân loại: {output_classified_path}")
-    
-    # Tạo chú giải (legend)
-    create_flood_legend(output_legend_path, class_names)
-    
-    return classified_data
 
 def create_flood_legend(output_path, class_names):
     """Tạo ảnh chú giải cho bản đồ phân loại"""

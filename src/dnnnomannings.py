@@ -1,9 +1,13 @@
-﻿"""
+"""
 DEEP NEURAL NETWORK - PHIÊN BẢN ỔN ĐỊNH
 Khắc phục: NaN values, numerical stability
 """
 
 import pandas as pd
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from src.core.utils import *
 import numpy as np
 import rasterio
 import rasterio.mask
@@ -79,16 +83,6 @@ TARGET_COL = 'Flood_1999'
 NODATA_VAL = -9999
 TARGET_RESOLUTION = 30
 
-def extract_values_at_points(tif_path, lons, lats):
-    if not tif_path or not os.path.exists(tif_path):
-        return np.zeros(len(lons))
-    try:
-        with rasterio.open(tif_path) as src:
-            coords = list(zip(lons, lats))
-            vals = [x[0] for x in src.sample(coords)]
-            return np.array(vals)
-    except:
-        return np.zeros(len(lons))
 
 def build_simple_dnn(input_dim):
     """Model đơn giản, ổn định"""
@@ -112,139 +106,8 @@ def build_simple_dnn(input_dim):
     model = keras.Model(inputs=inputs, outputs=outputs, name='SimpleDNN')
     return model
 
-def clip_raster_by_shapefile(input_tif, shapefile_path, output_tif):
-    """Cắt raster theo shapefile với error handling"""
-    print("\n✂️  Đang cắt theo shapefile...")
-    try:
-        gdf = gpd.read_file(shapefile_path)
-        with rasterio.open(input_tif) as src:
-            if str(gdf.crs) != str(src.crs):
-                print("   -> Chuyển đổi CRS...")
-                gdf = gdf.to_crs(src.crs)
-            shapes = [feature["geometry"] for _, feature in gdf.iterrows()]
-            out_image, out_transform = rasterio.mask.mask(src, shapes, crop=True, nodata=NODATA_VAL)
-            out_meta = src.meta.copy()
-        
-        out_meta.update({
-            "driver": "GTiff", "height": out_image.shape[1], "width": out_image.shape[2],
-            "transform": out_transform, "nodata": NODATA_VAL, "compress": "lzw"
-        })
-        
-        # Xóa file cũ nếu tồn tại
-        if os.path.exists(output_tif):
-            try:
-                os.remove(output_tif)
-            except:
-                pass
-        
-        with rasterio.open(output_tif, "w", **out_meta) as dest:
-            dest.write(out_image)
-        
-        print("   ✅ Đã cắt thành công!")
-        
-    except PermissionError:
-        print(f"   ❌ Lỗi: File đang được mở trong chương trình khác!")
-        print(f"   💡 Đóng file: {os.path.basename(output_tif)}")
-    except Exception as e:
-        print(f"   ❌ Lỗi: {e}")
 
-def classify_flood_depth(depth):
-    if isinstance(depth, (int, float)):
-        if depth <= 0: return 0
-        elif depth <= 0.5: return 1
-        elif depth <= 1.0: return 2
-        elif depth <= 1.5: return 3
-        elif depth <= 2.0: return 4
-        else: return 5
-    else:
-        classified = np.zeros_like(depth, dtype=np.uint8)
-        classified[depth > 0] = 1
-        classified[depth > 0.5] = 2
-        classified[depth > 1.0] = 3
-        classified[depth > 1.5] = 4
-        classified[depth > 2.0] = 5
-        return classified
 
-def create_flood_classification_map(depth_raster_path, output_classified_path, output_legend_path):
-    """Tạo bản đồ phân loại với error handling"""
-    try:
-        # Đọc dữ liệu
-        with rasterio.open(depth_raster_path) as src:
-            depth_data = src.read(1)
-            meta = src.meta.copy()
-        
-        # Phân loại
-        classified_data = np.zeros_like(depth_data, dtype=np.uint8)
-        mask = depth_data != NODATA_VAL
-        classified_data[mask] = classify_flood_depth(depth_data[mask])
-        classified_data[~mask] = 255
-        
-        # Thống kê
-        unique, counts = np.unique(classified_data[mask], return_counts=True)
-        total_pixels = np.sum(counts)
-        
-        class_names = [
-            "Cấp 0: Không ngập (0m)", "Cấp 1: Nhẹ (0-0.5m)", "Cấp 2: TB (0.5-1m)",
-            "Cấp 3: Nặng (1-1.5m)", "Cấp 4: Rất nặng (1.5-2m)", "Cấp 5: Nghiêm trọng (>2m)"
-        ]
-        
-        print("\n   📊 THỐNG KÊ PHÂN LOẠI:")
-        for cls, count in zip(unique, counts):
-            if cls < len(class_names):
-                pct = (count / total_pixels) * 100
-                print(f"   {class_names[int(cls)]}: {count:,} pixels ({pct:.2f}%)")
-        
-        # Lưu file phân loại
-        meta.update({'dtype': 'uint8', 'nodata': 255, 'compress': 'lzw'})
-        
-        # Xóa file cũ nếu tồn tại
-        if os.path.exists(output_classified_path):
-            try:
-                os.remove(output_classified_path)
-            except:
-                pass
-        
-        with rasterio.open(output_classified_path, 'w', **meta) as dst:
-            dst.write(classified_data, 1)
-            colormap = {
-                0: (255,255,255), 1: (255,255,0), 2: (255,200,0),
-                3: (255,150,0), 4: (255,100,0), 5: (255,0,0), 255: (0,0,0)
-            }
-            dst.write_colormap(1, colormap)
-        
-        print(f"   ✅ Đã lưu bản đồ phân loại: {output_classified_path}")
-        
-        # Tạo legend
-        fig, ax = plt.subplots(figsize=(8, 6))
-        colors = ['#FFFFFF', '#FFFF00', '#FFC800', '#FF9600', '#FF6400', '#FF0000']
-        
-        for i, (color, name) in enumerate(zip(colors, class_names)):
-            ax.barh(i, 1, color=color, edgecolor='black', linewidth=2)
-            ax.text(1.1, i, name, va='center', fontsize=11, weight='bold')
-        
-        ax.set_xlim(0, 3)
-        ax.set_ylim(-0.5, 5.5)
-        ax.axis('off')
-        ax.set_title('PHÂN LOẠI NGẬP LỤT - DNN\nThừa Thiên Huế - 1999', 
-                     fontsize=14, weight='bold', pad=20)
-        plt.tight_layout()
-        
-        # Xóa file legend cũ
-        if os.path.exists(output_legend_path):
-            try:
-                os.remove(output_legend_path)
-            except:
-                pass
-        
-        plt.savefig(output_legend_path, dpi=300, bbox_inches='tight', facecolor='white')
-        plt.close()
-        print(f"   ✅ Đã lưu chú giải: {output_legend_path}")
-        
-    except PermissionError as e:
-        print(f"   ❌ Lỗi quyền truy cập: {e}")
-        print(f"   💡 Hãy đóng file nếu đang mở trong QGIS/ArcGIS")
-    except Exception as e:
-        print(f"   ❌ Lỗi tạo bản đồ phân loại: {e}")
 
 def main():
     print("🌊 DNN ỔN ĐỊNH - DỰ BÁO NGẬP LỤT\n")
