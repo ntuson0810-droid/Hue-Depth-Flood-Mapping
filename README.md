@@ -66,6 +66,9 @@ Do giới hạn dung lượng trên Github, các file Raster kích thước lớ
 Mở Terminal/PowerShell tại thư mục gốc của dự án và chạy các script mô hình tương ứng:
 
 ```bash
+# Chạy mô hình Random Forest
+python src/rfmanningsv5.py
+
 # Chạy mô hình XGBoost
 python src/xgbmanningsv5.py
 
@@ -80,3 +83,4 @@ Mô hình sẽ tự động trích xuất các giá trị pixel, huấn luyện,
 * **Bản đồ phân loại (Classified `.tif`)**: Độ sâu ngập được phân cấp theo các ngưỡng rủi ro.
 * **Chỉ số đánh giá**: RMSE (Root Mean Square Error), MAE (Mean Absolute Error), và hệ số xác định $R^2$.
 * **Phân tích biến (Feature Importance)**: Tầm quan trọng của biến số dựa trên Permutation và Gain.
+
