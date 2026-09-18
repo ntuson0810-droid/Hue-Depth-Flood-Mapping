@@ -1,226 +1,127 @@
-﻿<div align="center">
+# Hue Depth Flood Mapping: A Physics-Informed Machine Learning Approach
 
-<!-- Animated Header -->
-<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=2,12,18&height=200&section=header&text=Hue%20Depth%20Flood%20Mapping&fontSize=60&fontColor=fff&animation=twinkling&fontAlignY=35" width="100%"/>
+[![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
+[![Earth Engine](https://img.shields.io/badge/Google%20Earth%20Engine-Demo%20App-4285F4?logo=google-earth)](https://ee-ntuson2003nts.projects.earthengine.app/view/machine-learning--remote-sensing-hue-flood-depth-mapping)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-<h3>
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=3000&pause=1000&color=2E9EF7&center=true&vCenter=true&multiline=true&width=800&height=80&lines=D%E1%BB%B1+b%C3%A1o+%C4%91%E1%BB%99+s%C3%A2u+ng%E1%BA%ADp+l%E1%BB%A5t+t%E1%BA%A1i+Th%E1%BB%ABa+Thi%C3%AAn+Hu%E1%BA%BF;Physics-Informed+Machine+Learning+%7C+GIS;Random+Forest+%7C+XGBoost+%7C+Deep+Neural+Network" alt="Typing SVG" />
-</h3>
+This repository contains the implementation of a physics-informed machine learning pipeline to predict and map continuous flood depths and flood risk zones in Thừa Thiên Huế province, Vietnam. 
 
-<br>
-
-[![Remote Sensing](https://img.shields.io/badge/Remote%20Sensing-Satellite%20Data-0066cc?style=for-the-badge&logo=nasa)](https://github.com/ntuson0810-droid/Hue-Depth-Flood-Mapping)
-[![Machine Learning](https://img.shields.io/badge/ML-Random%20Forest%20|%20XGBoost%20|%20DNN-00cc66?style=for-the-badge&logo=tensorflow)](https://github.com/ntuson0810-droid/Hue-Depth-Flood-Mapping)
-[![Python](https://img.shields.io/badge/Python-3.8+-ff9900?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-
-<br>
-
-**[📌 Giới Thiệu](#-giới-thiệu)** |
-**[🌐 Demo App](#-demo-app)** |
-**[🔄 Quy Trình](#-quy-trình-nghiên-cứu)** |
-**[🗂 Dữ Liệu](#-bộ-dữ-liệu-chi-tiết)** |
-**[🤖 Mô Hình](#-các-mô-hình)** |
-**[📊 Kết Quả](#-kết-quả-thực-nghiệm)** |
-**[🚀 Cài Đặt](#-cài-đặt--sử-dụng)** |
-**[📚 Nguồn Dữ Liệu](#-nguồn-dữ-liệu-data-sources)** |
-**[📜 Giấy Phép](#-giấy-phép-license)** |
-**[🖋️ Trích Dẫn](#️-trích-dẫn-citation)** |
-**[✉️ Liên Hệ](#️-liên-hệ-contact)**
-
-</div>
-
-<br>
+**[🔗 Access the Google Earth Engine Interactive Demo](https://ee-ntuson2003nts.projects.earthengine.app/view/machine-learning--remote-sensing-hue-flood-depth-mapping)**
 
 ---
 
-<div align="center">
-
-## 📌 Giới Thiệu
-
-</div>
-
-**Hue Depth Flood Mapping** là dự án nghiên cứu ứng dụng công nghệ **Viễn thám (Remote Sensing)**, **Hệ thống thông tin địa lý (GIS)** và các thuật toán **Học máy (Machine Learning)** để mô phỏng, dự báo định lượng và thành lập bản đồ độ sâu ngập lụt tại khu vực tỉnh Thừa Thiên Huế. Lấy sự kiện đại hồng thủy lịch sử tháng 11/1999 làm kịch bản tham chiếu chính, dự án chuyển đổi từ bài toán phân loại ngập/không ngập truyền thống sang bài toán **hồi quy định lượng** để ước lượng trực tiếp độ sâu ngập lụt (m) tại từng điểm ảnh phân giải 30m.
-
-### 🎯 Ý Nghĩa & Điểm Đột Phá
-
-> Ngập lụt là một trong những thách thức nghiêm trọng nhất tại Duyên hải miền Trung. Việc xác định định lượng độ sâu ngập (m) thay vì chỉ xác định ranh giới ngập mang lại giá trị to lớn cho công tác sơ tán và quy hoạch.
-
-**Điểm đột phá của dự án là áp dụng khung tiếp cận Physics-Informed Machine Learning (Học máy tích hợp tri thức vật lý):**
-```diff
-+ 1. Tích hợp hệ số nhám Manning's N từ dữ liệu lớp phủ bề mặt ESA WorldCover (theo bảng Chow 1959).
-+ 2. Áp dụng 11 ràng buộc đơn điệu (monotonic constraints) trong XGBoost để đảm bảo tính nhất quán vật lý.
-+ 3. Xây dựng 15 đặc trưng tương tác thủy lực (ví dụ: sức cản, độ dẫn nước).
-+ 4. Hậu xử lý thủy lực (hydraulic post-processing) theo 4 vùng địa hình đặc thù (cap-only & bathtub spreading).
-```
-
-<br>
+## Table of Contents
+1. [Overview](#overview)
+2. [Methodology & Workflow](#methodology--workflow)
+3. [Dataset and Features](#dataset-and-features)
+4. [Models & Results](#models--results)
+5. [Installation & Usage](#installation--usage)
+6. [Data Sources](#data-sources)
+7. [Citation & Contact](#citation--contact)
 
 ---
 
+## Overview
 
-<br>
+Predicting flood depth accurately is critical for disaster management. This project applies modern Machine Learning architectures (Random Forest, XGBoost, and Deep Neural Networks) combined with hydraulic domain knowledge (Physics-Informed approach) to estimate flood depths based on historical data from the devastating November 1999 flood in Huế.
 
----
-
-<div align="center">
-
-## 🌐 Demo App
-
-</div>
-
-<div align="center">
-
-### 🚀 Trải Nghiệm Ứng Dụng Tương Tác
-
-**Khám phá Bản đồ Độ sâu Ngập lụt và Phân vùng Rủi ro trực tiếp trên Google Earth Engine**
-
-<br>
-
-[![Demo App](https://img.shields.io/badge/🌍_Xem_Demo_App-Earth_Engine-4285F4?style=for-the-badge&logo=google-earth&logoColor=white)](https://ee-ntuson2003nts.projects.earthengine.app/view/machine-learning--remote-sensing-hue-flood-depth-mapping)
-
-<br>
-
-> 📍 **Chức năng:** Chuyển đổi giữa 3 mô hình học máy (RF, XGBoost, DNN), xem bản đồ độ sâu liên tục (0-5m) và bản đồ cảnh báo rủi ro 6 cấp độ.
-
-</div>
-
-<div align="center">
-
-## 🔄 Quy Trình Nghiên Cứu
-
-</div>
-
-<div align="center">
-
-<div align="center">
-  <img src="docs/workflow.jpg" width="90%" alt="Sơ đồ quy trình nghiên cứu">
-</div>
-*Sơ đồ 1: Luồng quy trình nghiên cứu từ thu thập dữ liệu viễn thám đến thành lập bản đồ*
-
-</div>
-
-<br>
+**Key Contributions:**
+- **High-Resolution Mapping:** Generates 30m resolution continuous flood depth maps (~5.8 million pixels).
+- **Physics-Informed Engineering:** Integrates Manning's roughness coefficient (N), HAND (Height Above Nearest Drainage), and monotonic constraints within tree-based algorithms.
+- **Zero-Inflated Handling:** Effectively models the zero-depth (non-flooded) boundaries to prevent false-positive inundation in higher elevations.
+- **Automated Spatial Pipeline:** Modularized Python codebase capable of extracting pixel-level values from large GeoTIFFs, building interaction features, training models, and rendering predicted spatial layers.
 
 ---
 
-<div align="center">
+## Methodology & Workflow
 
-## 🗂 Bộ Dữ Liệu Chi Tiết
+The workflow integrates Geographic Information Systems (GIS) for spatial data processing and Machine Learning for predictive modeling.
 
-</div>
+![Workflow Diagram](docs/workflow.jpg)
 
-Dự án sử dụng 31 đặc trưng đầu vào, được khai thác và xử lý từ 5 nguồn dữ liệu viễn thám và thực địa uy tín:
+*Workflow: From GIS data collection to feature engineering, model training, and spatial post-processing.*
 
-| Dữ liệu gốc | Nguồn cung cấp | Độ phân giải | Các đặc trưng trích xuất / dẫn xuất |
+---
+
+## Dataset and Features
+
+The dataset comprises 31 spatial features (16 base variables + 15 interaction terms) extracted from multiple remote sensing and hydrological sources:
+
+| Source Data | Provider / Citation | Resolution | Extracted / Derived Features |
 |---|---|---|---|
-| **ALOS World 3D** | JAXA | 30m | DSM gốc, Độ dốc (Slope), Hướng sườn (Aspect), Độ cong (Curvature), Độ gồ ghề (Roughness), TPI, Chỉ số ẩm TWI. |
-| **MERIT-Hydro** | Yamazaki (2019) | 30m | **HAND** (Height Above Nearest Drainage), Tích lũy dòng chảy (Flow Acc), Sức mạnh dòng chảy (SPI). |
-| **ESA WorldCover 2021** | ESA | 10m $\rightarrow$ 30m | Lớp phủ bề mặt (LULC), chuyển đổi thành **Hệ số nhám Manning's N** qua bảng tra cứu thủy lực. |
-| **JRC Global Surface Water**| JRC / Ủy ban Châu Âu| 30m | Xác suất xuất hiện bề mặt nước lịch sử (`gsw_occure`). |
-| **Lượng mưa trạm** | Đài KTTV Trung Trung Bộ| 5 trạm | Tổng lượng mưa tích lũy 11/1999 (nội suy không gian bằng IDW). |
-| **FloodMarks 1999** | Khảo sát thực địa | Điểm | **Biến mục tiêu**: Độ sâu ngập lụt tại 1.000 vị trí (Zero-inflated). |
-
-<br>
+| **ALOS World 3D** | JAXA | 30m | DSM, Slope, Aspect, Curvature, Roughness, TPI, TWI |
+| **MERIT-Hydro** | Yamazaki (2019) | 30m | **HAND**, Flow Accumulation, Stream Power Index (SPI) |
+| **ESA WorldCover 2021**| ESA | 10m $\rightarrow$ 30m | Land Use Land Cover (LULC) converted to **Manning's N** |
+| **Global Surface Water**| JRC / EC | 30m | Historical surface water occurrence (`gsw_occure`) |
+| **Precipitation** | Đài KTTV Trung Trung Bộ| Interpolated | Total cumulative rainfall (IDW spatial interpolation) |
+| **FloodMarks 1999** | Field Survey | Point | Target Variable: Flood depth at 1,000 points |
 
 ---
 
-<div align="center">
+## Models & Results
 
-## 🤖 Các Mô Hình
+The repository implements three distinct machine learning paradigms, heavily optimized and post-processed with a Gaussian spatial filter to remove isolated artifacts.
 
-</div>
-
-Ba thuật toán đại diện cho các trường phái Machine Learning hiện đại được tinh chỉnh:
-
-1. **Random Forest (RF - v5)**: Thuật toán baseline Ensemble mạnh mẽ, đạt kết quả tốt nhất về độ chính xác tổng thể ($R^2 = 0.8946$) nhờ khả năng chống nhiễu trên dữ liệu zero-inflated.
-2. **XGBoost (Extreme Gradient Boosting - GPU v5)**: Tích hợp 11 ràng buộc đơn điệu (monotonic constraints) để mô hình học đúng các quy luật bảo toàn vật lý (như HAND tăng thì ngập giảm). Huấn luyện siêu tốc trên GPU CUDA.
-3. **Deep Neural Network (DNN - v6)**: Kiến trúc mạng Nơ-ron 4 lớp ẩn với L2 Regularization & Dropout. Sử dụng hàm kích hoạt Sigmoid ở lớp đầu ra tạo giới hạn **Bounded Output [0, 5m]**, tối ưu cực tốt việc phân biệt ranh giới vùng an toàn và ngập lụt.
-
-*Nghiên cứu cũng độc lập kiểm chứng phát hiện của Grinsztajn et al. (NeurIPS 2022) rằng các mô hình tree-based (RF, XGBoost) vẫn duy trì lợi thế so với mạng nơ-ron sâu trên dữ liệu dạng bảng có kích thước vừa và nhỏ.*
-
-<br>
-
----
-
-<div align="center">
-
-## 📊 Kết Quả Thực Nghiệm
-
-</div>
-
-Kết quả dự báo được hậu xử lý bằng bộ lọc Gaussian và đánh giá thông qua tập kiểm thử (Test 10%). Điểm đáng chú ý: **Độ cao địa hình (DEM)** và các biến tương tác liên quan chiếm gần **80% tầm quan trọng** (Feature Importance).
-
-### 1. Mô hình Random Forest ($R^2 = 0.8946$)
-Bản đồ dự báo mượt mà và phân hóa rất tốt ở các vùng ngập từ 0.5m đến 2m. 
+### 1. Random Forest (RF - Baseline)
+Achieved the highest overall $R^2 = 0.8946$. RF demonstrates robust performance handling the zero-inflated nature of the target variable and interpolates continuous depths smoothly across the floodplain.
 
 <div align="center">
   <img src="results/KQ%20RF/RFv5_Predicted_vs_Actual.png" width="48%" />
   <img src="results/KQ%20RF/RF_PHAN_LOAI.png" width="48%" />
 </div>
 
-### 2. Mô hình XGBoost - Physics-Informed ($R^2 = 0.8884$)
-Dự báo mang tính "quyết liệt" hơn do áp dụng chặt chẽ các quy luật bảo toàn vật lý. Vạch rõ ranh giới các vùng ngập cực sâu (>2m) dọc các lưu vực sông chính.
+### 2. Physics-Informed XGBoost (GPU)
+Yielded an $R^2 = 0.8884$. This model incorporates monotonic constraints to enforce physical laws (e.g., flood depth must strictly decrease as HAND increases). It results in highly decisive boundaries for extreme depth zones (>2m) along main river basins.
 
 <div align="center">
   <img src="results/KQ%20XGB/XGBv51_Predicted_vs_Actual.png" width="48%" />
   <img src="results/KQ%20XGB/XGB_PHAN_LOAI.png" width="48%" />
 </div>
 
-### 3. Mô hình Deep Neural Network ($R^2 = 0.8847$)
-Xử lý xuất sắc các điểm Không Ngập nhờ cấu trúc Sigmoid giới hạn độ sâu đầu ra (RMSE cho các điểm 0m cực kỳ thấp: 0.070m).
+### 3. Deep Neural Network (DNN)
+Yielded an $R^2 = 0.8847$. Designed with a 4-layer architecture, L2 Regularization, and Dropout. A Sigmoid activation at the output layer strictly bounds the prediction between [0, 5m], exceptionally minimizing RMSE for non-flooded regions.
 
 <div align="center">
   <img src="results/KQ%20DNN/DNNv6_Predicted_vs_Actual.png" width="48%" />
   <img src="results/KQ%20DNN/DNN_PHAN_LOAI.png" width="48%" />
 </div>
 
-<br>
+*Note: The results validate recent findings (e.g., Grinsztajn et al., 2022) indicating that tree-based models (RF, XGBoost) still maintain an edge over deep neural networks on mid-sized tabular data.*
 
 ---
 
-<div align="center">
+## Installation & Usage
 
-## 🚀 Cài Đặt & Sử Dụng
-
-</div>
-
-### 📁 Cấu Trúc Thư Mục
-
+### Directory Structure
 ```text
 Hue-Depth-Flood-Mapping/
 ├── data/
-│   ├── raw/           # Dữ liệu bảng (CSV, Excel mốc ngập)
-│   ├── spatial/       # Dữ liệu không gian vector
-│   └── raster/        # Chứa dữ liệu DEM, LULC, Mưa (Bỏ qua trên Github do kích thước >100MB)
+│   ├── raw/           # Raw tabular data (CSV)
+│   ├── spatial/       # Vector spatial data
+│   └── raster/        # TIFF inputs (DEM, LULC, Precipitation) - Excluded from Git
+├── docs/              # Documentation assets
 ├── src/
-│   ├── core/          # MODULE TÁI CẤU TRÚC (Chứa toàn bộ logic không gian, thủy văn dùng chung)
-│   ├── dnnmanningv5.py / dnnnomannings.py
-│   ├── rfmanningsv5.py / rfnomannings.py
-│   └── xgbmanningsv5.py / xgbnomannings.py
-└── results/           # Kết quả đầu ra (bản đồ .tif, đồ thị đánh giá, weights)
+│   ├── core/          # Core modules containing shared spatial and ML logic
+│   ├── dnnmanningv5.py
+│   ├── rfmanningsv5.py
+│   └── xgbmanningsv5.py
+└── results/           # Output maps (.tif) and evaluation plots
 ```
 
-### ⚙️ Yêu Cầu & Cài Đặt
-
-Mã nguồn đã được mô-đun hóa (Clean Code). Khuyến nghị sử dụng **Miniconda** hoặc **Anaconda** để quản lý môi trường.
-
+### Environment Setup
+It is recommended to use `conda` for environment management.
 ```bash
 git clone https://github.com/ntuson0810-droid/Hue-Depth-Flood-Mapping.git
 cd Hue-Depth-Flood-Mapping
 
-# Tạo môi trường ảo
 conda create -n flood python=3.9
 conda activate flood
 
-# Cài đặt thư viện
 pip install pandas numpy rasterio geopandas scikit-learn xgboost tensorflow matplotlib tqdm
 ```
 
-### 💻 Sử Dụng
-
-Do giới hạn dung lượng trên Github, các file Raster gốc kích thước lớn (`.tif`) không được tải lên. Cần đặt các file Raster thực tế vào thư mục `data/raster/` trước khi chạy.
-
-Mở Terminal tại thư mục gốc và chạy các script để huấn luyện và sinh bản đồ:
+### Execution
+Due to GitHub file size limits, large `.tif` raster datasets are excluded. Ensure input rasters are placed in `data/raster/` before execution.
 
 ```bash
 python src/rfmanningsv5.py
@@ -228,47 +129,21 @@ python src/xgbmanningsv5.py
 python src/dnnmanningv5.py
 ```
 
+---
 
-<br>
+## Data Sources
+We gratefully acknowledge the open-access datasets provided by the following institutions:
+- **JAXA:** ALOS World 3D (AW3D30)
+- **European Space Agency (ESA):** WorldCover 2021
+- **Joint Research Centre (JRC):** Global Surface Water
+- **Yamazaki et al. (2019):** MERIT-Hydro
+- **Đài KTTV Trung Trung Bộ:** Historical precipitation data (Nov 1999)
 
 ---
 
-<div align="center">
+## Citation & Contact
 
-## 📚 Nguồn Dữ Liệu (Data Sources)
-
-</div>
-
-Nghiên cứu này trân trọng ghi nhận và sử dụng các sản phẩm dữ liệu mở từ các tổ chức uy tín trên thế giới:
-- **JAXA (Japan Aerospace Exploration Agency):** Mô hình số độ cao ALOS World 3D 30m.
-- **ESA (European Space Agency):** Bản đồ lớp phủ bề mặt toàn cầu WorldCover 2021 (10m).
-- **JRC (Joint Research Centre - EU):** Dữ liệu lịch sử bề mặt nước Global Surface Water.
-- **MERIT-Hydro (Yamazaki et al., 2019):** Dữ liệu mạng lưới thủy văn toàn cầu có độ chính xác cao.
-- **Đài KTTV Trung Trung Bộ:** Cung cấp số liệu mưa sự kiện lịch sử 11/1999 tại tỉnh Thừa Thiên Huế.
-
-<br>
-
----
-
-<div align="center">
-
-## 📜 Giấy Phép (License)
-
-</div>
-
-Dự án này được phân phối dưới giấy phép **MIT License**. Bạn có toàn quyền sử dụng, sửa đổi và phân phối lại mã nguồn cho mục đích cá nhân hoặc thương mại, với điều kiện ghi nhận tác giả gốc. Cấu trúc mã nguồn mở khuyến khích sự đóng góp từ cộng đồng.
-
-<br>
-
----
-
-<div align="center">
-
-## 🖋️ Trích Dẫn (Citation)
-
-</div>
-
-Nếu bạn sử dụng mã nguồn hoặc dữ liệu từ dự án này trong nghiên cứu của mình, vui lòng trích dẫn theo định dạng BibTeX dưới đây:
+If you utilize this codebase or framework for your research, please consider citing it as follows:
 
 ```bibtex
 @misc{nguyen2026hueflood,
@@ -281,24 +156,6 @@ Nếu bạn sử dụng mã nguồn hoặc dữ liệu từ dự án này trong 
 }
 ```
 
-<br>
-
----
-
-<div align="center">
-
-## ✉️ Liên Hệ (Contact)
-
-</div>
-
-Mọi câu hỏi, thắc mắc hoặc đề xuất hợp tác (đặc biệt về hướng nghiên cứu ứng dụng AI trong biến đổi khí hậu), xin vui lòng liên hệ:
-
-- **Tác giả:** Nguyễn Tư Sơn
-- **Email:** [ntuson0810@gmail.com](mailto:ntuson0810@gmail.com)
-- **GitHub:** [@ntuson0810-droid](https://github.com/ntuson0810-droid)
-
-<div align="center">
-  <br>
-  <i>Nếu bạn thấy dự án này hữu ích, hãy để lại 1 ⭐️ trên GitHub để ủng hộ tác giả nhé! Trân trọng cảm ơn.</i>
-  <br>
-</div>
+**Author:** Nguyễn Tư Sơn  
+**Email:** ntuson0810@gmail.com  
+**GitHub:** [@ntuson0810-droid](https://github.com/ntuson0810-droid)
