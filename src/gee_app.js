@@ -76,7 +76,7 @@ var authorInfo = ui.Label('Dự án: Hue Depth Flood Mapping - Tác giả: Nguy�
 controlPanel.add(title);
 controlPanel.add(subtitle);
 controlPanel.add(authorInfo);
-controlPanel.add(ui.Panel([ui.Label('________________________________________________')], {margin: '0 0 10px 0', color: '#bdc3c7'}));
+controlPanel.add(ui.Label('________________________________________________', {margin: '0 0 10px 0', color: '#bdc3c7'}));
 
 // Dropdown chọn Mô hình
 var modelLabel = ui.Label('1. Chọn Mô hình học máy:', {fontWeight: 'bold'});
