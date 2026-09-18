@@ -16,6 +16,7 @@
 <br>
 
 **[📌 Giới Thiệu](#-giới-thiệu)** |
+**[🌐 Demo App](#-demo-app)** |
 **[🔄 Quy Trình](#-quy-trình-nghiên-cứu)** |
 **[🗂 Dữ Liệu](#-bộ-dữ-liệu-chi-tiết)** |
 **[🤖 Mô Hình](#-các-mô-hình)** |
@@ -55,6 +56,33 @@
 <br>
 
 ---
+
+
+<br>
+
+---
+
+<div align="center">
+
+## 🌐 Demo App
+
+</div>
+
+<div align="center">
+
+### 🚀 Trải Nghiệm Ứng Dụng Tương Tác
+
+**Khám phá Bản đồ Độ sâu Ngập lụt và Phân vùng Rủi ro trực tiếp trên Google Earth Engine**
+
+<br>
+
+[![Demo App](https://img.shields.io/badge/🌍_Xem_Demo_App-Earth_Engine-4285F4?style=for-the-badge&logo=google-earth&logoColor=white)](https://ee-ntuson2003nts.projects.earthengine.app/view/machine-learning--remote-sensing-hue-flood-depth-mapping)
+
+<br>
+
+> 📍 **Chức năng:** Chuyển đổi giữa 3 mô hình học máy (RF, XGBoost, DNN), xem bản đồ độ sâu liên tục (0-5m) và bản đồ cảnh báo rủi ro 6 cấp độ.
+
+</div>
 
 <div align="center">
 
