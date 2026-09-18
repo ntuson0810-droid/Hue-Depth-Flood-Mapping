@@ -296,7 +296,6 @@ Mọi câu hỏi, thắc mắc hoặc đề xuất hợp tác (đặc biệt v�
 - **Tác giả:** Nguyễn Tư Sơn
 - **Email:** [ntuson0810@gmail.com](mailto:ntuson0810@gmail.com)
 - **GitHub:** [@ntuson0810-droid](https://github.com/ntuson0810-droid)
-- **LinkedIn:** [Kết nối với Nguyễn Tư Sơn](#)
 
 <div align="center">
   <br>
